@@ -1,0 +1,45 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "Matthew Klundt",
+    "longName": "Mega Watchface",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/mega_watchface_preview_bw.png",
+                "menuIcon": true,
+                "name": "WATCHFACE_PREVIEW",
+                "type": "png"
+            },
+            {
+                "file": "images/bluetooth_white.png",
+                "name": "BT_ICON",
+                "type": "png"
+            },
+            {
+                "file": "images/life_container_white.png",
+                "name": "LIFE_CONTAINER",
+                "type": "png"
+            },
+            {
+                "file": "images/life_tick_white.png",
+                "name": "LIFE_TICK",
+                "type": "png"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "Mega",
+    "targetPlatforms": [
+        "aplite",
+        "basalt"
+    ],
+    "uuid": "7f0d5bd7-3801-422c-ab9a-9fc6c55caaa6",
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
