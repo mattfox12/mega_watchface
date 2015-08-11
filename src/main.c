@@ -46,6 +46,13 @@ static void update_time() {
     //Use 24h hour format
     strftime(buffer, sizeof("00:00"), "%H:%M", tick_time);
     layer_set_hidden((Layer*)s_suffix_layer, true);
+    
+    // make sure it is the right width
+    GRect bounds = layer_get_bounds((Layer*)s_time_layer);
+    if (bounds.size.w != 134) {
+      bounds.size.w = 134;
+      layer_set_bounds((Layer*)s_time_layer, bounds);
+    }
   } else {
     //Use 12 hour format
     strftime(buffer, sizeof("00:00"), "%I:%M", tick_time);
@@ -54,6 +61,13 @@ static void update_time() {
     }
     strftime(suffixBuffer, sizeof("am"), "%p", tick_time);
     layer_set_hidden((Layer*)s_suffix_layer, false);
+    
+    // make sure it is the right width
+    GRect bounds = layer_get_bounds((Layer*)s_time_layer);
+    if (bounds.size.w != 110) {
+      bounds.size.w = 110;
+      layer_set_bounds((Layer*)s_time_layer, bounds);
+    }
   }
   
   // date
@@ -68,9 +82,14 @@ static void update_time() {
 
 static void main_window_load(Window *window) {
   int textStartY = 80;
+  int timeWidth = 110;
+  
+  if(clock_is_24h_style() == true) {
+    timeWidth = 134;
+  }
   
   // Create time TextLayer
-  s_time_layer = text_layer_create(GRect(0, textStartY, 110, 50));
+  s_time_layer = text_layer_create(GRect(0, textStartY, timeWidth, 50));
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_text_color(s_time_layer, GColorWhite);
   text_layer_set_text(s_time_layer, "00:00");
@@ -104,7 +123,7 @@ static void main_window_load(Window *window) {
   s_battery_container = bitmap_layer_create(GRect(7, 7, 14, 60));
   bitmap_layer_set_background_color(s_battery_container, GColorClear);
   bitmap_layer_set_bitmap(s_battery_container, battery_container_bitmap);
-  bitmap_layer_set_compositing_mode(s_battery_container, GCompOpSet);
+  bitmap_layer_set_compositing_mode(s_battery_container, GCompOpAssign);
   layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer (s_battery_container));
   
   // Battery Pellets
@@ -112,7 +131,7 @@ static void main_window_load(Window *window) {
     s_battery_pellet[i] = bitmap_layer_create(GRect(11, 9 + (20 - i) * 2, 6, 1));
     bitmap_layer_set_background_color(s_battery_pellet[i], GColorClear);
     bitmap_layer_set_bitmap(s_battery_pellet[i], battery_pellet_bitmap);
-    bitmap_layer_set_compositing_mode(s_battery_pellet[i], GCompOpSet);
+    bitmap_layer_set_compositing_mode(s_battery_pellet[i], GCompOpAssign);
     layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer (s_battery_pellet[i]));
   }
   update_battery_status(battery_state_service_peek());
@@ -122,7 +141,11 @@ static void main_window_load(Window *window) {
   s_bt_icon_layer = bitmap_layer_create(GRect(10, 53, 8, 11));
   bitmap_layer_set_background_color(s_bt_icon_layer, GColorClear);
   bitmap_layer_set_bitmap(s_bt_icon_layer, bt_icon_bitmap);
-  bitmap_layer_set_compositing_mode(s_bt_icon_layer, GCompOpSet);
+  #ifdef PBL_COLOR
+    bitmap_layer_set_compositing_mode(s_bt_icon_layer, GCompOpSet);
+  #else
+    bitmap_layer_set_compositing_mode(s_bt_icon_layer, GCompOpAssign);
+  #endif
   layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer (s_bt_icon_layer));
   
 	bt_status = bluetooth_connection_service_peek();
